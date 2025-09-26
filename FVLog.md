@@ -132,6 +132,37 @@ kernel_2<<<..., rmm::cuda_stream_default()>>>(p);
       - an example is described in: https://developer.nvidia.com/blog/maximizing-performance-with-massively-parallel-hash-maps-on-gpus/
       - index map has them sorted, (*11, *35, *46, *97)
       - range query, deduplication is simplified.
+      - Hashgraph demos the effectiveness of combining a hashmap with compact array-style datastructure
+      - But for Datalog we need deduplication and handle multi-values
+      - HISA helps by making a sorted hash indexed array that maps to the compact representation
+- HISA Impl:
+```
+using column_type=rmm::device_vector<u32>;
+struct GHashRelContainer {
+// open addressing hashmap for indexing
+OpenAddressMap *index_map = nullptr;
+tuple_size_t index_map_size = 0;
+float index_map_load_factor;
+// flatten tuple data
+device_vector<tuple_size_t> sorted_scalar;
+// will be inited to arity size
+column_type *data_raw = nullptr;
+tuple_size_t tuple_counts = 0;
+int arity; bool tmp_flag = false;
+};
+__global__ void load_relation_container(
+GHashRelContainer *target,int arity,column_type &data,
+tuple_size_t data_size,tuple_size_t index_column_size,
+float index_map_load_factor);
+__global__ void create_index(
+GHashRelContainer *target, tuple_indexed_less cmp);
+__global__ void get_join_result_size(
+OpenAddressMap *inner, column_type &outer,
+int join_column_counts,tuple_size_t *join_result_size);
+__global__ void get_join_result(
+OpenAddressMap *inner, column_type &outer, int arity,
+int join_column_counts, column_type *output_raw_data);
+```
 - Inductive queries in DL
   - Fast range queries are needed
   - HISA helps with the serialization requirements of recursive joins
