@@ -163,6 +163,15 @@ __global__ void get_join_result(
 OpenAddressMap *inner, column_type &outer, int arity,
 int join_column_counts, column_type *output_raw_data);
 ```
+  - data_raw has the compact array for sorted data
+  - load_relation_container does GPU sorting and stores the tuples in vram
+  - create_idx is a kernel that creates an index based on loaded raw data within HISA object
+  - HISA being built for deductive reasoning offers
+    - get_join_result and get_join_result_size
+    - take inner relation hashtable and outer relation sorted array as input
+    - coalesced memory access speeds it up and improves throughput
+    - join_result uses bulk data retrieval
+    - 
 - Inductive queries in DL
   - Fast range queries are needed
   - HISA helps with the serialization requirements of recursive joins
