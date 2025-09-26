@@ -215,10 +215,10 @@ Propose a vectorized execution algorithm for the Free Join.
 - Left-deep binary join is similar to the Generic Join.
 
 Two algorithms process the join operation similarly:
-    Binary Hash Join iterates over tuples on one relation.
-        For each tuple, probes into the hash table of other relation.
-    Each loop level in Generic Join iterates over the keys of a certain trie.
-    Probes into several other tries for each key.
+   -  Binary Hash Join iterates over tuples on one relation.
+        - For each tuple, probes into the hash table of other relation.
+   - Each loop level in Generic Join iterates over the keys of a certain trie.
+   - Probes into several other tries for each key.
     
 Free join takes an optimized binary join,
     converts to the free join plan,
@@ -228,12 +228,12 @@ Free join takes an optimized binary join,
    - takes full advantage of design space,
    - uses existing cost based optimizers for binary joins.
    
-   Main inefficiency of generic join: constructing trie on each relation of the query.
-   Binary join map only needs to build hashmap for the right hand side relation of a join.
-   Need to improve trie building speed.
-   One optimization is they don't build tries for tables that are left children.
+   - Main inefficiency of generic join: constructing trie on each relation of the query.
+   - Binary join map only needs to build hashmap for the right hand side relation of a join.
+   - Need to improve trie building speed.
+   - One optimization is they don't build tries for tables that are left children.
    
-   COLT datastructure builds tries lazily, building subtries on demand.
+   - COLT datastructure builds tries lazily, building subtries on demand.
        
 
 
