@@ -234,6 +234,25 @@ Free join takes an optimized binary join,
    - One optimization is they don't build tries for tables that are left children.
    
    - COLT datastructure builds tries lazily, building subtries on demand.
+```
+ fn join(all_tries, plan, tuple):
+ if plan == []:
+ output(tuple)
+ else:
+ tries = [ t ∈ all_tries | t.relation ∈ plan[0] ]
+ # iterate over the cover
+ @outer for t in tries[0].iter():
+ subtries = [ iter_r.get(t) ]
+ tup = tuple + t
+ # probe into other tries
+ for trie in tries[1..]:
+ key = tup[trie.vars]
+ subtrie = trie.get(key)
+ if subtrie == None: continue @outer
+ subtries.push(subtrie)
+ new_tries = all_tries[tries  → subtries]
+ join(new_tries, plan[1:], tup)
+```
        
 
 
