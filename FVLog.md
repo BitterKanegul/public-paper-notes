@@ -132,5 +132,12 @@ kernel_2<<<..., rmm::cuda_stream_default()>>>(p);
       - an example is described in: https://developer.nvidia.com/blog/maximizing-performance-with-massively-parallel-hash-maps-on-gpus/
       - index map has them sorted, (*11, *35, *46, *97)
       - range query, deduplication is simplified.
-      - each      
+- Inductive queries in DL
+  - Fast range queries are needed
+  - HISA helps with the serialization requirements of recursive joins
+  - Join column data only helps with efficient insertion and retrieval ops
+  - Serialization can be done by parallel iteration over this array
+  - by keeping only the columns that matter for the join memory is saved. (FVLog does this naturally as it is a columnar store)
+  - by doing essentially "pointer arithmetic" one can reduce the number of times we need to load things from main memory
+  -        
 ### Free Join: Unifying Worst-Case Optimal and Traditional Joins
