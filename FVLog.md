@@ -193,3 +193,50 @@ int join_column_counts, column_type *output_raw_data);
     
       
 ### Free Join: Unifying Worst-Case Optimal and Traditional Joins
+
+Generic Join on the gpu:
+
+How do you represent the join as a matmul?
+
+-> Subtract to get 0 is the way/ do the graph adjacency matrix thing.
+
+
+https://arxiv.org/pdf/2301.10841
+ WCOJ miscategorized as working for cyclic graphs, and yannalakis for the acyclic version.
+ 
+ 
+ These guys unify the WCOJ with the traditional Binary Join.
+ They create a new datastructure called Column Oriented Lazy Trie.
+
+Classic Column oriented Layout to improve the trie data structure in WCOJ.
+
+Propose a vectorized execution algorithm for the Free Join.
+-> Left-deep binary join is similar to the Generic Join.
+
+Two algorithms process the join operation similarly:
+    Binary Hash Join iterates over tuples on one relation.
+        For each tuple, probes into the hash table of other relation.
+    Each loop level in Generic Join iterates over the keys of a certain trie.
+    Probes into several other tries for each key.
+    
+Free join takes an optimized binary join,
+    converts to the free join plan,
+     optimizes the free join plan.
+       something that sits between the free join and generic join
+       
+       - takes full advantage of design space,
+       - uses existing cost based optimizers for binary joins.
+       
+       Main inefficiency of generic join: constructing trie on each relation of the query.
+       Binary join map only needs to build hashmap for the right hand side relation of a join.
+       Need to improve trie building speed.
+       One optimization is they don't build tries for tables that are left children.
+       
+       COLT datastructure builds tries lazily, building subtries on demand.
+       
+
+
+
+
+
+
