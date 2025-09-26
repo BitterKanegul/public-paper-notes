@@ -260,7 +260,25 @@ sequence of relations; it need not specify the join attributes, since
 all shared attributes are joined. In contrast, a Generic Join plan is
 a sequence of variables; it need not specify the relations, since all
 relations on each variable are joined.
-```     
+```
+
+Ok, so they partition the query Q's variables into different subsets, and order these partitions.
+Every $\phi_k$ has access to the variables before it $\phi_i <_{Q} \phi_k$.
+
+
+Example free plan is
+$[[R(x,a)], [S(b), T(x)], [T(c)]]$
+
+to execute first node, we iterate over each tuple (x,a) in R
+use x to probe into S
+iterate over each b in S[x]
+use x to probe into T,
+finally iterate over all c in T[x]
+
+This is the left-deep plan
+
+For the generic join plan we can do
+$[[R(x),S(x), T(x) ], [R(a)], [S(b)], [T(c)]$
 
 
 
