@@ -135,6 +135,13 @@ kernel_2<<<..., rmm::cuda_stream_default()>>>(p);
       - Hashgraph demos the effectiveness of combining a hashmap with compact array-style datastructure
       - But for Datalog we need deduplication and handle multi-values
       - HISA helps by making a sorted hash indexed array that maps to the compact representation
+- Inductive queries in DL
+  - Fast range queries are needed
+  - HISA helps with the serialization requirements of recursive joins
+  - Join column data only helps with efficient insertion and retrieval ops
+  - Serialization can be done by parallel iteration over this array
+  - by keeping only the columns that matter for the join memory is saved. (FVLog does this naturally as it is a columnar store)
+  - by doing essentially "pointer arithmetic" one can reduce the number of times we need to load things from main memory
 - HISA Impl:
 ```
 using column_type=rmm::device_vector<u32>;
@@ -171,13 +178,8 @@ int join_column_counts, column_type *output_raw_data);
     - take inner relation hashtable and outer relation sorted array as input
     - coalesced memory access speeds it up and improves throughput
     - join_result uses bulk data retrieval
+    - precalculating join sizes help since join result sizes vary through the operation
+    - (maybe a tight upper_bound / lower_bound would help?)
     - 
-- Inductive queries in DL
-  - Fast range queries are needed
-  - HISA helps with the serialization requirements of recursive joins
-  - Join column data only helps with efficient insertion and retrieval ops
-  - Serialization can be done by parallel iteration over this array
-  - by keeping only the columns that matter for the join memory is saved. (FVLog does this naturally as it is a columnar store)
-  - by doing essentially "pointer arithmetic" one can reduce the number of times we need to load things from main memory
-  -        
+      
 ### Free Join: Unifying Worst-Case Optimal and Traditional Joins
