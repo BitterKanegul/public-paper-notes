@@ -285,6 +285,7 @@ Then the algorithm is executed:
  join(new_tries, plan[1:], tup)
 ```
 
+Optimizing Free Join Plan:
 
 
 
