@@ -234,25 +234,6 @@ Free join takes an optimized binary join,
    - One optimization is they don't build tries for tables that are left children.
    
    - COLT datastructure builds tries lazily, building subtries on demand.
-```
- fn join(all_tries, plan, tuple):
- if plan == []:
- output(tuple)
- else:
- tries = [ t ∈ all_tries | t.relation ∈ plan[0] ]
- # iterate over the cover
- @outer for t in tries[0].iter():
- subtries = [ iter_r.get(t) ]
- tup = tuple + t
- # probe into other tries
- for trie in tries[1..]:
- key = tup[trie.vars]
- subtrie = trie.get(key)
- if subtrie == None: continue @outer
- subtries.push(subtrie)
- new_tries = all_tries[tries  → subtries]
- join(new_tries, plan[1:], tup)
-```
 - Much dual, very nice
 ```
 a left-deep linear plan for binary join is a
@@ -278,8 +259,31 @@ finally iterate over all c in T[x]
 This is the left-deep plan
 
 For the generic join plan we can do
-$[[R(x),S(x), T(x) ], [R(a)], [S(b)], [T(c)]$
+$[[R(x),S(x), T(x) ], [R(a)], [S(b)], [T(c)]]$
 
+Now I see how this can move between the two different plans and how one can trade off...
+
+Then the algorithm is executed: 
+
+```
+ fn join(all_tries, plan, tuple):
+ if plan == []:
+ output(tuple)
+ else:
+ tries = [ t ∈ all_tries | t.relation ∈ plan[0] ]
+ # iterate over the cover
+ @outer for t in tries[0].iter():
+ subtries = [ iter_r.get(t) ]
+ tup = tuple + t
+ # probe into other tries
+ for trie in tries[1..]:
+ key = tup[trie.vars]
+ subtrie = trie.get(key)
+ if subtrie == None: continue @outer
+ subtries.push(subtrie)
+ new_tries = all_tries[tries  → subtries]
+ join(new_tries, plan[1:], tup)
+```
 
 
 
