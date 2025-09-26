@@ -253,7 +253,14 @@ Free join takes an optimized binary join,
  new_tries = all_tries[tries  → subtries]
  join(new_tries, plan[1:], tup)
 ```
-       
+- Much dual, very nice
+```
+a left-deep linear plan for binary join is a
+sequence of relations; it need not specify the join attributes, since
+all shared attributes are joined. In contrast, a Generic Join plan is
+a sequence of variables; it need not specify the relations, since all
+relations on each variable are joined.
+```     
 
 
 
