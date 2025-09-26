@@ -225,7 +225,7 @@ Free join takes an optimized binary join,
      optimizes the free join plan.
        something that sits between the free join and generic join
    
-   - takes full advantage of design space,
+   - takes full advantage of design space (not restricted to joining one tuple at a time)
    - uses existing cost based optimizers for binary joins.
    
    - Main inefficiency of generic join: constructing trie on each relation of the query.
