@@ -130,5 +130,7 @@ kernel_2<<<..., rmm::cuda_stream_default()>>>(p);
       - hashing -> murmur3
       - cuda atomic operation for parallel hash table construction
       - an example is described in: https://developer.nvidia.com/blog/maximizing-performance-with-massively-parallel-hash-maps-on-gpus/
-      -       
+      - index map has them sorted, (*11, *35, *46, *97)
+      - range query, deduplication is simplified.
+      - each      
 ### Free Join: Unifying Worst-Case Optimal and Traditional Joins
