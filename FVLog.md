@@ -110,5 +110,25 @@ int* p = v.data(); // typed pointer to device memory
 kernel_2<<<..., rmm::cuda_stream_default()>>>(p); 
 
 ```   
-
+#### HISA: Hash Indexed Sorted Array
+- Main workhorse of the FVlog relation joining
+- Memory optimized, useful for range queries.
+- k-ary joins was being developed in the GDLog paper https://arxiv.org/pdf/2311.02206v3
+- They provide an example of Souffle's semi-naive evaluation (you only work on tuples that were introduced in the previous iteration)
+  - e.g. Reach relation split into 3 versions: new for tuples current iteration , delta for previous iteration, full for all tuples
+- Fast indexing, Range Queries and Sorting are needed for deduction heavy workloads
+  - HISA is optimized for SIMD
+  - Inspired by HashGraph (https://arxiv.org/pdf/1907.02900)
+  - Key Steps:
+    - Map between compressed data array on memory and sorted index map
+    - Use a grid-stride loop in CUDA
+    - First step: Build Sorted Index Map
+      - 35,11,46, 97
+      - join key determines order
+      - sorded index map creates an open-addressing hash table with low order and inserts keys in lexi-order
+      - collisions are handled by linear probing. better for the GPU
+      - hashing -> murmur3
+      - cuda atomic operation for parallel hash table construction
+      - an example is described in: https://developer.nvidia.com/blog/maximizing-performance-with-massively-parallel-hash-maps-on-gpus/
+      -       
 ### Free Join: Unifying Worst-Case Optimal and Traditional Joins
