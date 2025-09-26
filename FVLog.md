@@ -10,6 +10,16 @@ Here are my notes for https://sidharthkumar.io/publications/AAAI2025.pdf
 ## 2. Preliminaries
   - Datalog
   - Decomposed Storage Model (DSM)
+    -   Store as ([(Column_i, PID)], [(Column_i+1, PID)]...) (structure of arrays)
+    -   PID is the surrogate column
+    -   all col is easy, a row, we join based on PID
+    -   additional id increases memory, perform column compression
+    -   write operation is more expensive.
+    -   datalog the materialized IDB is OOM larger than the EDB
+    -   merging delta with full in semi-naive evaluation needs heavy write operation
+    -   mitigation in Vlog is * ON-demand Concatenation*
+    -   FVlog eats the cost of data insertion to maintain better properties.
+    -   
   - Column Oriented Relations on the GPU
     - Uncompressed Raw Data
     - Schedule multiple rules per iteration
@@ -180,6 +190,6 @@ int join_column_counts, column_type *output_raw_data);
     - join_result uses bulk data retrieval
     - precalculating join sizes help since join result sizes vary through the operation
     - (maybe a tight upper_bound / lower_bound would help?)
-    - 
+    
       
 ### Free Join: Unifying Worst-Case Optimal and Traditional Joins
